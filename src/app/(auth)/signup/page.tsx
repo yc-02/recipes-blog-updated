@@ -9,10 +9,9 @@ export default function SignUpPage() {
   const [last_name,setLastName] = useState<string | null>(null)
   const [username, setUsername] = useState<string | null>(null)
 
-console.log(email)
   return (
     <div className='flex justify-center p-13'>
-    <form className='w-full max-w-xs p-10 rounded text-base; bg-neutral-100'>
+    <form className='w-full max-w-xs p-10 rounded'>
     <label htmlFor="email" className='inputLabel'>Email</label>
     <input 
       id="email" 

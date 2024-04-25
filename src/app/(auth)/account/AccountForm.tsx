@@ -1,8 +1,10 @@
 'use client'
-import { useCallback, useEffect, useState } from 'react'
+import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { type User } from '@supabase/supabase-js'
 import LoginForm from '../login/LoginForm'
+import Image from "next/image";
+import { updateProfile } from '@/app/action'
 
 export default function AccountForm({ user }: { user: User | null }) {
   const supabase = createClient()
@@ -10,6 +12,14 @@ export default function AccountForm({ user }: { user: User | null }) {
   const [first_name, setFirstName] = useState<string | null>(null)
   const [last_name,setLastName] = useState<string | null>(null)
   const [username, setUsername] = useState<string | null>(null)
+  const [avatar_url, setAvatarUrl] = useState<string|null>(null);
+  const [imageFile,setImageFile]= useState<string|null>(null);
+  function handleImageChange(e:ChangeEvent<HTMLInputElement>) {
+       if(e.target.files){
+         setImageFile(URL.createObjectURL(e.target.files[0]));
+       }
+}
+
 
 
   const getProfile = useCallback(async () => {
@@ -30,6 +40,7 @@ export default function AccountForm({ user }: { user: User | null }) {
               setFirstName(data.first_name)
               setUsername(data.username)
               setLastName(data.last_name)
+              setAvatarUrl(data.avatar_url)
             }
           } catch (error) {
             alert('Error loading user data!')
@@ -43,44 +54,30 @@ export default function AccountForm({ user }: { user: User | null }) {
     getProfile()
   }, [user, getProfile])
 
-  async function updateProfile({
-    username,
-    first_name,
-    last_name,
-  }: {
-    username: string | null
-    first_name: string | null
-    last_name: string |null
-  }) {
-    try {
-      setLoading(true)
 
-      const { error } = await supabase.from('profiles').upsert({
-        id: user?.id as string,
-        email:user?.email,
-        first_name: first_name,
-        username: username,
-        last_name: last_name,
-        updated_at: new Date().toISOString(),
-      })
-      if (error) throw error
-      alert('Profile updated!')
-    } catch (error) {
-      alert('Error updating the data!')
-    } finally {
-      setLoading(false)
-    }
-  }
 
   return (
     <div className='flex justify-center p-13'>
        {user? 
-       <div className='w-full max-w-xs p-10 rounded text-base; bg-neutral-100'>
+       <form className='w-full max-w-sm p-10 rounded items-center'>
+        <div className='flex items-center justify-center'>
+        {imageFile&&
+        <div className="w-40 h-40 overflow-hidden rounded-full">
+        <Image src={imageFile} alt="file" width={150} height={150} className='w-full h-full overflow-hidden'/>
+        </div>}
+        {avatar_url && imageFile===null && <div className="w-40 h-40 overflow-hidden rounded-full">
+        <Image src={avatar_url} alt="file" width={150} height={150} className='w-full h-full overflow-hidden'/>
+        </div>
+        }
+        </div>
+        <label htmlFor="avatar_url" className='inputLabel'>Edit picture</label>
+        <input type="file" accept="image/png,image/jpeg" id="avatar_url" name='avatar_url' onChange={handleImageChange} multiple className='input'/>
         <label htmlFor="email" className='inputLabel'>Email</label>
-        <input id="email" type="text" value={user?.email} disabled className='input' />
+        <input id="email" name='email' type="text" value={user?.email} disabled className='input' />
         <label htmlFor="first_name" className='inputLabel'>First Name</label>
         <input
           id="first_name"
+          name='first_name'
           type="text"
           value={first_name || ''}
           onChange={(e) => setFirstName(e.target.value)}
@@ -89,6 +86,7 @@ export default function AccountForm({ user }: { user: User | null }) {
         <label htmlFor="last_name" className='inputLabel'>Last Name</label>
         <input
           id="last_name"
+          name='last_name'
           type="text"
           value={last_name || ''}
           onChange={(e) => setLastName(e.target.value)}
@@ -97,6 +95,7 @@ export default function AccountForm({ user }: { user: User | null }) {
         <label htmlFor="username" className='inputLabel'>Username</label>
         <input
           id="username"
+          name='username'
           type="text"
           value={username || ''}
           onChange={(e) => setUsername(e.target.value)}
@@ -105,13 +104,13 @@ export default function AccountForm({ user }: { user: User | null }) {
       <div className='my-3'>
         <button
           className="button"
-          onClick={() => updateProfile({ first_name, last_name, username,})}
+          formAction={updateProfile}
           disabled={loading}
         >
           {loading ? 'Loading ...' : 'Update'}
         </button>
       </div>
-    </div>
+    </form>
     :
     <LoginForm/>
     }

@@ -8,7 +8,6 @@ import DeleteButton from "../DeleteButton";
 
 export async function generateMetadata({params}:{params:{id:string}}){
     const supabase=createClient()
-
     const {data} = await supabase.from('recipes').select().eq('id',params.id).single()
 
     return{
@@ -29,15 +28,16 @@ async function getRecipe(id:string){
 export default async function RecipeDetails({params}:{params:{id:string}}){
     const recipe = await getRecipe(params.id)
     const supabase = createClient()
-    const {data:user} = await supabase.auth.getUser()
+    const {data:{user}} = await supabase.auth.getUser()
+
 
     return(
-        <div className="p-10 bg-neutral-100">
+        <div>
         {user?(
             <>
             <div className="flex justify-between shadow-sm items-baseline">
-            <h2 className="text-4xl font-semibold text-neutral-600 ">Recipe Details</h2>
-            {user.user?.id === recipe.user_id && 
+            <h2 className="text-4xl font-semibold">Recipe Details</h2>
+            {user?.id === recipe.user_id && 
             <DeleteButton id={recipe.id}/>
             }
             </div>
@@ -45,15 +45,15 @@ export default async function RecipeDetails({params}:{params:{id:string}}){
             <div className="grid mt-2 md:grid-cols-2 gap-4">
                 <div className=" ml-10 mt-10">
                 <h3 className="font-bold uppercase text-3xl mb-5">{recipe.recipe_name}</h3>
-                <p className="text-neutral-500">Created by {recipe.profiles?.username}</p>
-                <p className="text-neutral-400 flex"><span className="mr-1">Updated</span>{dayjs(recipe.created_at).format('MMM D, YYYY h:mm A')}</p>
+                <p>Created by {recipe.profiles?.username}</p>
+                <p className="flex"><span className="mr-1">Updated</span>{dayjs(recipe.created_at).format('MMM D, YYYY h:mm A')}</p>
                 </div>
                 <div className="flex justify-center h-52">
                 <Image
                 src={`${recipe.image_path}`}
                 width={500}
                 height={500}
-                alt="ace"
+                alt="image"
                 className="object-cover rounded-md"
                 />
                 </div>
@@ -68,9 +68,9 @@ export default async function RecipeDetails({params}:{params:{id:string}}){
             </div>
             </>
             ):
-            (<div className="text-center font-bold">
-                <p className="mb-4">Please Sign in first.</p>
-                <Link href="/signin" className="btn-secondary " > Sign in</Link>
+            (<div className="flex flex-col justify-center items-center h-96">
+                <p className="mb-4">Please Log in first.</p>
+                <Link href="/login" className="button">Log in</Link>
             </div>)}
         </div>
     )

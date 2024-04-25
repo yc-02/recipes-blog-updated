@@ -1,4 +1,4 @@
-'use server'
+"use server"
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
@@ -12,12 +12,11 @@ export async function login(formData: FormData) {
     password: formData.get('password') as string,
   }
 
-  const { error } = await supabase.auth.signInWithPassword(data)
+  const { error,data:signinData } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
     throw new Error (error.message)
   }
-
   revalidatePath('/', 'layout')
   redirect('/')
 }
@@ -26,8 +25,7 @@ export async function signup(formData: FormData) {
   const enter = Object.fromEntries(formData)
   const {data:profileEmail} = await supabase.from("profiles").select("email").eq("email",`${enter.email}`);
   const {data:profileUsername}= await supabase.from("profiles").select("username").eq("username",`${enter.username}`)
-  console.log(profileEmail?.length)
-  console.log(profileUsername?.length)
+
 
   if(profileEmail?.length!==0){
     throw new Error('Email already exists!');
@@ -61,10 +59,11 @@ export async function signup(formData: FormData) {
 
 export async function AddRecipeCard(formData:FormData){
   const recipe=Object.fromEntries(formData)
+
   const {data:{user}}=await supabase.auth.getUser()
       const file = recipe.image_data
       const filePath = `${user?.id}/${uuidv4()}`
-      const {data:uploadData,error:uploadError} = await supabase.storage.from('test').upload(filePath,file,{
+      const {data:uploadData,error:uploadError} = await supabase.storage.from('recipes').upload(filePath,file,{
               contentType:  'image/png,image/jpeg',
       })
       if (uploadError){
@@ -78,7 +77,7 @@ export async function AddRecipeCard(formData:FormData){
       ingredients:recipe.ingredients,
       time_used:recipe.time_used,
       user_id:user?.id,
-      image_path:`test/${uploadData.path}`,
+      image_path:`recipes/${uploadData.path}`,
       file_path:filePath
   })
   if (error){
@@ -90,19 +89,65 @@ export async function AddRecipeCard(formData:FormData){
 
 }
 
-//delete food card
+//delete recipe card
 export async function deleteRecipeCard(id:string){
-  const {data} = await supabase.from('recipes').select('file_path').eq('id',id)
+  const {data} = await supabase.from('recipes').select('file_path').eq('id',id).single()
   const {error} = await supabase.from('recipes').delete().eq('id',id)
 
 
-  const filePathToDelete:string=data? data[0].file_path :''
-
-  const {error:storageError } = await supabase.storage.from('test').remove([`${filePathToDelete}`])
+  const {error:storageError } = await supabase.storage.from('recipes').remove([`${data?.file_path}`])
   
   if (error){
       throw new Error (error.message)
   }else if(storageError){
       throw new Error (storageError.message)
   }else redirect('/')
+}
+
+//update user profile
+
+export async function updateProfile(formData:FormData) {
+
+  const {data:{user}}=await supabase.auth.getUser()
+  const {data} = await supabase.from('profiles').select('avatar_url').eq('id',user?.id).single()
+  const profile=Object.fromEntries(formData)
+
+
+  const filePath = `${user?.id}/profile-image`
+  if(profile.avatar_url!==null){
+    if(data?.avatar_url!==null){
+      const {data,error} = await supabase.storage.from('avatar').update(filePath,profile.avatar_url,{
+        contentType:  'image/png,image/jpeg',
+      })
+      if (error){
+        throw new Error (error.message)
+      }
+  
+    }else{
+      const {data:uploadData,error:uploadError} = await supabase.storage.from('avatar').upload(filePath,profile.avatar_url,{
+        contentType:  'image/png,image/jpeg',
+     })
+     if (uploadError){
+      throw new Error (uploadError.message)
+    }
+  }
+  }
+
+   
+
+    const { error } = await supabase.from('profiles').upsert({
+      id: user?.id as string,
+      email:user?.email,
+      first_name: profile.first_name,
+      username: profile.username,
+      last_name: profile.last_name,
+      updated_at: new Date().toISOString(),
+      avatar_url:`avatar/${user?.id}/profile-image`
+    })
+    if(error){
+      throw new Error(error.message)
+    }else{
+      redirect('/account')
+    }
+
 }

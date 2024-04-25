@@ -1,56 +1,77 @@
+"use client"
 import Image from 'next/image';
 import Link from "next/link";
-import { createClient } from "@/utils/supabase/server";
 import dayjs from 'dayjs';
-import { userLikedType } from '../Types';
 import Likes from './Likes';
+import { RecipeType } from '../Types';
+import { useSearchParams } from 'next/navigation';
+import Sort from '../components/Sort';
+import { ClockIcon} from '@heroicons/react/24/outline'
+import { useState } from 'react';
 
 
+export default function RecipeCard({recipes}:{recipes:RecipeType[]|undefined}) {
 
-export default async function RecipeCard() {
-    
-    const supabase = createClient()
-    const {data:{user}} = await supabase.auth.getUser();
-    const {data,error}=await supabase.from("recipes").select(`*,likes(*)`).order('id', { ascending: false })
-    const recipes = data?.map((recipe)=>{
-      const userHasLiked = recipe.likes.find((like:userLikedType)=>like.user_id === user?.id)
-      return{
-        ...recipe,
-        userLiked:userHasLiked,
-        likesCount:recipe.likes.length
-      }
-    })
+   const searchParams = useSearchParams()
+   const search = searchParams.get('search')?.toLowerCase()
+   let searchedRecipes = recipes
+   if(search){
+    searchedRecipes = recipes?.filter(r => r.ingredients.toLowerCase().includes(search)||r.recipe_name.toLowerCase().includes(search))
+  }
+  const sort = searchParams.get('sort')
+  let renderRecipes =searchedRecipes
+  if(sort){
+    if(sort === "mostrecent"){
+      renderRecipes = searchedRecipes?.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+    } else if(sort === "timeused:lowtohigh"){
+     renderRecipes = searchedRecipes?.sort((a, b) => a.time_used - b.time_used)
+    } else if(sort === "mostpopular"){
+      renderRecipes = searchedRecipes?.sort((a,b)=> b.likesCount - a.likesCount)
+    }
+  }
+  const [showSort,setShowSort]=useState(false)
 
     return (
-    <div className="grid md:grid-cols-3 gap-10">
-    {recipes?.map((recipe)=>(
+      <div className='flex flex-col gap-10 p-6'>
+       <div className='flex justify-between items-center'>
+       <h3 className="text-xl font-semibold text-neutral-500">Healthy and Delicious Creations</h3>
+       <Sort search={search} showSort={showSort} setShowSort={setShowSort}/>
+       </div>
+
+        <div className="flex flex-col items-center justify-center gap-10 w-full md:grid md:grid-cols-3 xl:grid-cols-4" onClick={()=>setShowSort(false)}>
+        {renderRecipes?.map((recipe)=>(
         <div key={recipe.id} className="card hover:shadow-lg">
           <Link href={`/${recipe.id}`}>
-          <Image
-          src={`${recipe.image_path}`}
-          width={500}
-          height={500}
-          alt="ace"
-          className="w-full h-48 sm:h-52 object-cover"
-          />
+            <div>
+            <Image
+            src={`${recipe.image_path}`}
+            width={500}
+            height={500}
+            alt="image"
+            className="w-full h-48 sm:h-52 object-cover"
+            />
+            </div>
           <div className="m-4">
           <p className="font-bold uppercase text-lg">{recipe.recipe_name}</p>
-          <p className="text-neutral-400 flex"> <span className="mr-1">Updated</span>{dayjs(recipe.created_at).format('MMM D, YYYY h:mm A')}</p>
+          <p className="flex text-text-secondary items-baseline gap-2">Updated at <span className='text-sm'>{dayjs(recipe.created_at).format('MMM D, YYYY h:mm A')}</span></p>
           </div>
           <div className="badges">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 inline-block mr-2">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-          </svg>
-            <span>{recipe.time_used} minutes</span>
+            <ClockIcon  className="h-6 w-6 inline-block mr-2"/>
+            <p>{recipe.time_used} minutes</p>
           </div>
           </Link>
-          {user &&(<div className="flex justify-end m-2"> <Likes recipe={recipe}/> <span>{recipe.likesCount}</span></div>)}
+          <div className="flex justify-end m-2"> 
+          <Likes recipe={recipe}/> <span>{recipe.likesCount}</span>
+          </div>
 
         </div>
     ))}
-
-      {data?.length === 0 && (<p className="text-2xl text-neutral-400"> No recipes available.</p>)}
-      {error && (<p>{error.message}</p>)}
+    <div className='col-span-3 h-96 flex items-center justify-center'>
+      {recipes?.length === 0 && (<p className="text-xl text-text-secondary"> No recipes available.</p>)}
+      {searchedRecipes?.length === 0 && recipes?.length!==0 && (<p className='text-xl text-text-secondary'>Nothing Found.</p>)}
     </div>
+    </div>
+    </div>
+      
   )
 }

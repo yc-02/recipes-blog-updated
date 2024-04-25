@@ -20,18 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="md:grid grid-cols-6">
-          <nav className="md:col-span-1">
-          <Navbar/>
-          </nav>
-          <div className="md:col-span-5 flex flex-col min-h-screen bg-neutral-50">
-            <AuthNav/>
-            {children}
-          </div>
-          <footer className="w-full text-center md:col-span-6">
-            <Footer/>
-          </footer>
-        </div>
+          {children}
       </body>
     </html>
   );
