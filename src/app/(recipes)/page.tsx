@@ -1,7 +1,8 @@
 "use server"
-import RecipeCard from "../RecipeCard";
+import RecipeCard from "../components/RecipeCard";
 import { createClient } from "@/utils/supabase/server";
-import { userLikedType } from "../../Types";
+import { userLikedType } from "../Types";
+
 
 
 export default async function Home() {
@@ -19,10 +20,9 @@ export default async function Home() {
 
 
 
-
   return (
       <div>
-      <RecipeCard recipes={recipes}/>
+      <RecipeCard recipes={recipes} user={user}/>
       </div>
   );
 }

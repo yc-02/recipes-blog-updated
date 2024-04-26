@@ -1,13 +1,13 @@
 "use client"
 import { useTransition } from "react"
 import { deleteRecipeCard } from "../action"
+import { TrashIcon} from '@heroicons/react/24/outline'
 
 export default function DeleteButton({id}:{id:string}) {
 
     const [isPending,startTransition] =useTransition()
     return (
       <button
-      className="button m-5"
       onClick={()=>startTransition(()=>deleteRecipeCard(id))}
       disabled={isPending}
       >
@@ -18,7 +18,7 @@ export default function DeleteButton({id}:{id:string}) {
         )}
         {!isPending && (
           <span>
-            Delete
+           <TrashIcon className="w-6 h-6 text-text"/>
           </span>
         )}
       </button>

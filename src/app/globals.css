@@ -21,19 +21,20 @@ body{
     @apply rounded overflow-hidden shadow-md relative w-11/12 md:max-w-sm;
 }
 .badges{
-    @apply bg-zinc-200 text-zinc-500 text-xs
+    @apply
+     bg-zinc-200 text-zinc-500 text-xs
     uppercase font-bold
     rounded-full p-2 absolute top-0
     ml-2 mt-2 flex items-center justify-center
 }
+.dropdown-content{
+    @apply 
+    absolute flex-col bg-white z-10 rounded right-0 top-12 shadow text-left w-full items-start py-2
+}
+.dropdown-link{
+    @apply hover:bg-secondary py-2 w-full px-3
+}
+.dropbtn{
+    @apply flex gap-2 items-center cursor-pointer
+}
 
-
-
-@keyframes slide {
-    from {
-      width: 0;
-    }
-    to {
-      width: 100%;
-    }
-  }

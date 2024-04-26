@@ -1,4 +1,5 @@
-import SmNav from "./SmNav"
+import AuthNavClient from "./AuthNavClient"
+import SmNav from "./AuthNavClient"
 import { createClient } from "@/utils/supabase/server"
 
 export default async function AuthNav() {
@@ -13,7 +14,7 @@ export default async function AuthNav() {
 
   return ( 
     <div className="flex items-center gap-5 justify-between w-full py-2 px-6 bg-secondary">
-      <SmNav user={user} data={data}/>
+      <AuthNavClient user={user} data={data}/>
     </div>
   )
 }

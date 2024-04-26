@@ -1,5 +1,11 @@
+import { Metadata } from 'next'
 import AccountForm from '../AccountForm'
 import { createClient } from '@/utils/supabase/server'
+
+export const metadata:Metadata={
+  title:"Profile"
+}
+
 
 export default async function profilePage() {
   const supabase = createClient()
@@ -9,5 +15,10 @@ export default async function profilePage() {
   } = await supabase.auth.getUser()
 
 
-  return <AccountForm user={user} />
+  return (
+    <div className='pt-14'>
+    <AccountForm user={user} />
+    </div>
+
+)
 }

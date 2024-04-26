@@ -28,10 +28,8 @@ export default function Likes({recipe}:{recipe:RecipeType}) {
 
 
   return (
-    <div>
     <button onClick={handleClick}>
-      <HeartIcon  className={`${recipe.userLiked?"fill-rose-400 w-6 h-6":"fill-none w-6 h-6 stroke-rose-400"}`}/>
+      <HeartIcon  className={`${recipe.userLiked?"fill-red-500 w-6 h-6 stroke-red-500":"fill-none w-6 h-6 stroke-black"}`}/>
     </button>
-    </div>
   )
 }

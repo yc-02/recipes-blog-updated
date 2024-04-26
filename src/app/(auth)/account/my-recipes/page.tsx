@@ -1,9 +1,8 @@
 
 import { createClient } from '@/utils/supabase/server';
-import Link from 'next/link'
 import React from 'react'
 import { userLikedType } from '@/app/Types';
-import RecipeCard from '@/app/(recipes)/RecipeCard';
+import RecipeCard from '@/app/components/RecipeCard';
 
 export function generateMetadata(){
   return{
@@ -25,9 +24,13 @@ export default async function myRecipes() {
   })
 
 
+
   return (
     <div>
-        <RecipeCard recipes={recipes}/>
+      <div className='w-full p-12 text-center'>
+      <p className='text-lg font-semibold'>My Recipes</p>
+      </div>
+        <RecipeCard recipes={recipes} user={user}/>
     </div>
     
   )

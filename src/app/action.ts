@@ -57,7 +57,7 @@ export async function signup(formData: FormData) {
 
 }
 
-export async function AddRecipeCard(formData:FormData){
+export async function AddRecipeCard(formData:FormData,directionsData:string){
   const recipe=Object.fromEntries(formData)
 
   const {data:{user}}=await supabase.auth.getUser()
@@ -73,7 +73,7 @@ export async function AddRecipeCard(formData:FormData){
 
   const {error}=await supabase.from("recipes").insert({
       recipe_name:recipe.recipe_name,
-      directions:recipe.directions,
+      directions:directionsData,
       ingredients:recipe.ingredients,
       time_used:recipe.time_used,
       user_id:user?.id,
@@ -84,7 +84,7 @@ export async function AddRecipeCard(formData:FormData){
       throw new Error (error.message)
   }
   else{
-      redirect('/')
+      redirect('/account/my-recipes')
   }
 
 }
@@ -122,6 +122,7 @@ export async function updateProfile(formData:FormData) {
       if (error){
         throw new Error (error.message)
       }
+      console.log(data)
   
     }else{
       const {data:uploadData,error:uploadError} = await supabase.storage.from('avatar').upload(filePath,profile.avatar_url,{
@@ -147,7 +148,7 @@ export async function updateProfile(formData:FormData) {
     if(error){
       throw new Error(error.message)
     }else{
-      redirect('/account')
+      redirect('/account/profile')
     }
 
 }

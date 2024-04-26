@@ -1,7 +1,11 @@
 import { createClient } from '@/utils/supabase/server'
-import Image from 'next/image'
-import Link from 'next/link'
+import { Metadata } from 'next'
 import React from 'react'
+
+export const metadata:Metadata={
+  title:"Account"
+}
+
 
 export default async function accountPage() {
 
