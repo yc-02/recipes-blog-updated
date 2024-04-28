@@ -20,6 +20,7 @@ const config: Config = {
         'secondary': '#f9f9f9',
         'primary': '#BACC81',
         'border':'#EEEDE7',
+        'inputBorder':'#E4E4E4',
       },
     },
   },

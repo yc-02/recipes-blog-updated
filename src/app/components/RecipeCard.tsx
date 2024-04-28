@@ -3,15 +3,14 @@ import Image from 'next/image';
 import Link from "next/link";
 import dayjs from 'dayjs';
 import Likes from './Likes';
-import { RecipeType } from '../Types';
 import { useSearchParams } from 'next/navigation';
 import Sort from './Sort';
 import { ClockIcon} from '@heroicons/react/24/outline'
 import { useState } from 'react';
-import { User } from '@supabase/supabase-js';
+import { RecipeCardType } from '../Types';
 
 
-export default function RecipeCard({recipes,user}:{recipes:RecipeType[]|undefined,user:User|null}) {
+export default function RecipeCard({recipes}:{recipes:RecipeCardType[]|undefined}) {
 
    const searchParams = useSearchParams()
    const search = searchParams.get('search')?.toLowerCase()
@@ -31,7 +30,6 @@ export default function RecipeCard({recipes,user}:{recipes:RecipeType[]|undefine
     }
   }
   const [showSort,setShowSort]=useState(false)
-
 
     return (
       <div className='flex flex-col gap-10 bg-secondary w-screen'>

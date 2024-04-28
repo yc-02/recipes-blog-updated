@@ -16,13 +16,13 @@ export default function SearchBar() {
     <form onSubmit={handleSubmit}>
         <label className='flex gap-1'>
         <input 
-        className='shadow border border-border p-2 rounded'
+        className='border border-inputBorder p-2 rounded text-lg shadow'
         type='text'
         value={search}
         placeholder='Search recipes'
         onChange={(e)=>setSearch(e.target.value)}/>
         <button className='flex items-center'>   
-        <MagnifyingGlassIcon className="w-7 h-7"/>
+        <MagnifyingGlassIcon className="w-8 h-8"/>
         </button>    
         </label>
     </form>

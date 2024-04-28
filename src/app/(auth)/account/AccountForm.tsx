@@ -16,7 +16,6 @@ export default function AccountForm({ user }: { user: User | null }) {
   const [avatar_url, setAvatarUrl] = useState<string|null>(null);
   const [imageFile,setImageFile]= useState<string|null>(null);
   function handleChange(e:ChangeEvent<HTMLInputElement>) {
-      console.log('what')
        if(e.target.files){
          setImageFile(URL.createObjectURL(e.target.files[0]));
        }
@@ -65,7 +64,7 @@ export default function AccountForm({ user }: { user: User | null }) {
     event.preventDefault(); 
     const formData = new FormData(event.currentTarget); 
     try {
-      await updateProfile(formData);
+      await updateProfile(formData,imageFile);
     } catch (error) {
       console.error('Error updating profile:', error);
     } finally{

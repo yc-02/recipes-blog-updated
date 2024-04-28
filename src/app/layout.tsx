@@ -20,8 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-         <AuthNav/>
+        <div className="min-h-screen">
+        <AuthNav/>
           {children}
+       <footer className="w-full text-center">
+        <Footer/>
+      </footer>
+        </div>
       </body>
     </html>
   );

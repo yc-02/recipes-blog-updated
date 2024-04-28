@@ -11,7 +11,7 @@ body{
     @apply block font-semibold mt-2;
 }
 .input {
-    @apply shadow appearance-none border rounded w-full py-2 px-3 leading-tight font-light;
+    @apply appearance-none border rounded w-full p-3 leading-tight font-light border-inputBorder;
 }
 .button{
     @apply rounded p-1 text-base font-bold bg-primary text-white cursor-pointer;
@@ -38,3 +38,21 @@ body{
     @apply flex gap-2 items-center cursor-pointer
 }
 
+.addContainer{
+    @apply flex w-full justify-center pt-12
+}
+.addInputLabel{
+    @apply font-medium
+}
+.addForm{
+    @apply p-12 max-w-3xl
+}
+.addBtn{
+    @apply  py-2 px-3 border bg-white rounded border-inputBorder
+}
+.addBtnContainer{
+    @apply flex border rounded justify-center my-2 py-9
+}
+.publishBtn{
+    @apply rounded p-2 bg-primary text-white font-bold
+}

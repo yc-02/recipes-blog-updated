@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
-import { notFound } from "next/navigation";
 import dayjs from 'dayjs';
-import DeleteButton from "../../components/DeleteButton";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import DeleteButton from "@/app/components/DeleteButton";
+
 
 export async function generateMetadata({params}:{params:{id:string}}){
     const supabase=createClient()
@@ -14,37 +15,58 @@ export async function generateMetadata({params}:{params:{id:string}}){
     }
 }
 
-async function getRecipe(id:string){
-    const supabase=createClient()
-    const {data}=await supabase.from("recipes").select(`*,profiles(*)`).eq('id',id).single()
 
-    if (!data){
-        notFound()
+type recipeDetailsData={
+    id:string;
+    recipe_name:string;
+    directions:string;
+    time_used:number;
+    user_id:string;
+    created_at:Date;
+    image_path:string;
+    file_path:string;
+    ingredients:string;
+    username:string
+    profiles:{
+        username:string;
+        avatar_url:string
+
     }
-    return data
 }
 
+
+
 export default async function RecipeDetails({params}:{params:{id:string}}){
-    const recipe = await getRecipe(params.id)
-    const supabase = createClient()
+    const supabase=createClient()
+    const {data}=await supabase.from('recipes').select(`*,profiles(avatar_url,username)`).eq('id',params.id).single()
+    const recipe:recipeDetailsData = data
     const {data:{user}} = await supabase.auth.getUser()
     const directions = JSON.parse(recipe.directions)
-    console.log(directions)
 
     return(
+
         <div className="px-12 py-6 flex flex-col gap-3">
         {user?(
             <>
             <div className="grid md:grid-cols-2 gap-4">
                 <div className="md:h-96 w-full flex flex-col gap-3">
                 <p className="font-bold uppercase text-xl mb-5">{recipe.recipe_name}</p>
-                <p>Created by {recipe.profiles?.username}</p>
-                <p className="flex"><span className="mr-1">Updated</span>{dayjs(recipe.created_at).format('MMM D, YYYY h:mm A')}</p>
-                <div>
-                    {user?.id === recipe.user_id && 
-                    <DeleteButton id={recipe.id}/>
-                    }
+                <p>Created by</p>
+                <Link href={`/user-recipe/${recipe.profiles.username}`} className="flex gap-2 items-center">
+                <div className="w-10 h-10 overflow-hidden rounded-full bg-purple-50">
+                <Image src={`${recipe.profiles.avatar_url}`} width={50} height={50} alt="profile-image" className="object-cover"/>
                 </div>
+                <p> {recipe.profiles.username}</p>
+                </Link>
+                <p className="flex"><span className="mr-1">Updated</span>{dayjs(recipe.created_at).format('MMM D, YYYY h:mm A')}</p>
+                    {user?.id === recipe.user_id && 
+                    <div className="flex items-center gap-3">
+                        <Link href={`/edit/${recipe.id}`}>
+                        <PencilSquareIcon className="w-6 h-6 text-text"/>
+                        </Link>
+                    <DeleteButton id={recipe.id}/>
+                    </div>
+                    }
                 </div>
                 <div className="flex h-60 md:h-96 w-full overflow-hidden justify-center">
                 <Image

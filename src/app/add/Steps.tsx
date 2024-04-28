@@ -1,12 +1,14 @@
 "use client"
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "react";
 
 export default function Steps({setFormData,formData}:{
     setFormData: Dispatch<SetStateAction<string[]>>, formData:string[]
 }) {
-    const [steps, setSteps] = useState(1);
 
 
+
+    const [steps, setSteps] = useState(formData.length===0?1:formData.length);
     const newInputs = Array.from({length:steps})
     
     const addStep = () => {
@@ -33,16 +35,19 @@ export default function Steps({setFormData,formData}:{
 
   return (
     <div>
-
       {newInputs.map((_,index)=>(
         <div key={index}>
-        <label>Step{index+1}</label>
-        <textarea className="input h-32 resize-none" name={`step ${index + 1}`} onChange={(e)=>handleInputChange(e,index)}></textarea>
+        <label className="text-sm">Step{index+1}</label>
+        <textarea className="input h-32 resize-none" name={`step ${index + 1}`} onChange={(e)=>handleInputChange(e,index)} value={formData[index]}></textarea>
         </div>
       ))}
       <div className="flex items-center gap-3">
-      <button type="button" onClick={addStep}>Add Step</button>
-      <button onClick={deleteStep} type="button">Delete Step</button>
+      <button type="button" className="addBtn flex items-center" onClick={addStep}>
+      <PlusIcon className="w-6 h-6"/>
+      Step</button>
+      <button onClick={deleteStep} className="addBtn flex items-center" type="button">
+        <MinusIcon className="w-6 h-6"/>
+        Step</button>
       </div>
   </div>
   )

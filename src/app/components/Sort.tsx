@@ -8,7 +8,6 @@ export default function Sort({search,showSort,setShowSort}:{search:string|undefi
     const pathname = usePathname()
     
     const handleSortChange = (term:string) => {
-      console.log(term,'what is term')
       if(search){
         router.replace(`${pathname}?search=${search}&sort=${term.toString()}`)
       }else{

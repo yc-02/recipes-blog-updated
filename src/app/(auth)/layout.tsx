@@ -16,9 +16,6 @@ export default function RootLayout({
       {children}
       </main>
     </div>
-    <footer className="w-full text-center">
-      <Footer/>
-    </footer>
     </>
   );
 }
