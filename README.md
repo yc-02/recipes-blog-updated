@@ -1,4 +1,4 @@
-Recipes Blog built with Next.js, and Supabase.
+Recipes Blog built with Next.js and Supabase.
 
 Responsive design.
 
