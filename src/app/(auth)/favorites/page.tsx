@@ -38,10 +38,10 @@ export default async function FavoritesPage() {
 
   return (
     <div>
-      <div className='w-full p-12 text-center'>
-      <p className='text-lg font-semibold'>My Favorites</p>
+      <div className='px-12 py-5'>
+      <p className='primary-title'><span>My</span>Favorites</p>
       </div>
-    <RecipeCard recipes={recipes} user={user}/>
+    <RecipeCard recipes={recipes}/>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 "use client"
 import { FormEvent, useState } from "react";
 import { AddRecipeCard } from "@/app/action";
-import AddForm from "../components/AddForm";
+import AddForm from "../../components/AddForm";
 
 
 export default function AddPage() {

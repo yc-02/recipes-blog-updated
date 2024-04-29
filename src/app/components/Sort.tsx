@@ -24,7 +24,7 @@ export default function Sort({search,showSort,setShowSort}:{search:string|undefi
   return (
     <div className="pr-6">
         <button className="flex gap-3" onClick={()=>setShowSort(!showSort)}>
-        <p>{checked===null? 'Sort By':checked}</p>
+        <p className="font-medium">{checked===null? 'Sort By':checked}</p>
         <ChevronDownIcon className="w-6 h-6"/>
         </button>
         <div className="relative">
@@ -33,7 +33,7 @@ export default function Sort({search,showSort,setShowSort}:{search:string|undefi
                 <div key={a}>
                 <button className="flex items-center justify-start gap-1" onClick={()=>handleClick(a)}>
                 <CheckIcon className={`w-5 h-5 ${checked===a?'text-inherit':'text-white'}`}/>
-                <p className="text-start">{a}</p>
+                <p className="text-start font-medium">{a}</p>
                 </button>
                 </div>
 

@@ -1,7 +1,6 @@
 
-import AuthNav from "../components/AuthNav";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
+import SearchNav from "../components/SearchNav";
+
 
 
 
@@ -14,7 +13,7 @@ export default function RootLayout({
     <>
     <div className="min-h-screen flex flex-col max-w-screen-sm md:max-w-full">
       <nav>
-      <Navbar/>
+      <SearchNav/>
       </nav>
       <main>
       {children}

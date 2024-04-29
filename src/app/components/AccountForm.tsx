@@ -2,7 +2,7 @@
 import { ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState, useTransition } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { type User } from '@supabase/supabase-js'
-import LoginForm from '../login/LoginForm'
+import LoginForm from '../(auth)/login/LoginForm'
 import Image from "next/image";
 import { updateProfile } from '@/app/action'
 import { XMarkIcon } from '@heroicons/react/24/solid'

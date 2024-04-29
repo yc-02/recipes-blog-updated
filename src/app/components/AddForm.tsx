@@ -2,7 +2,7 @@
 import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useRef, useState, useTransition } from 'react';
 import Image from "next/image";
 import { PhotoIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import Steps from '../add/Steps';
+import Steps from '../(auth)/add/Steps';
 import { RecipesSupabaseDataType } from '../Types';
 
 interface AddFormProp{
@@ -49,7 +49,7 @@ export default function AddForm({handleSubmit,setStepFormData,stepFormData,recip
     ref={imageInputRef}
     onChange={handleChange}
     />
-    <div className="flex justify-end mt-3">
+    <div className="flex justify-end my-3">
     <button className="publishBtn" type="submit" disabled={isPending}>
     {isPending && (
       <span>
@@ -65,7 +65,7 @@ export default function AddForm({handleSubmit,setStepFormData,stepFormData,recip
     </div>
     <label className="addInputLabel">
         Recipe name
-        <input type="text"  name="recipe_name" className="input" required value={recipe_name} onChange={(e)=>setRecipeName(e.target.value)}/>
+        <input type="text"  name="recipe_name" className="input mb-2" required value={recipe_name} onChange={(e)=>setRecipeName(e.target.value)}/>
     </label>
     <label className="addInputLabel">
         Time used - minutes
@@ -87,12 +87,10 @@ export default function AddForm({handleSubmit,setStepFormData,stepFormData,recip
     </div>
 
     }
-    <label className="addInputLabel"> Ingredients</label>
-        <textarea  name="ingredients"className="input h-32 resize-none" required placeholder="Use comma to separate" value={ingredients} onChange={(e)=>setIngerdients(e.target.value)}/>
-    <label className="addInputLabel">
-        Directions
+    <label className="addInputLabel">Ingredients</label>
+        <textarea  name="ingredients"className="input h-32 resize-none mb-2" required placeholder="Use comma to separate" value={ingredients} onChange={(e)=>setIngerdients(e.target.value)}/>
+    <label className="addInputLabel">Directions</label>
        <Steps setFormData={setStepFormData} formData={stepFormData}/>
-    </label>
 </form>
 </div>
   )

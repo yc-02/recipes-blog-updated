@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import AccountForm from '../AccountForm'
+import AccountForm from '../../components/AccountForm'
 import { createClient } from '@/utils/supabase/server'
 
 export const metadata:Metadata={

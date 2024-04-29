@@ -4,7 +4,6 @@ import { createClient } from '@/utils/supabase/server'
 import React from 'react'
 
 export default async function UserPage({params}:{params:{slug:string}}) {
-  console.log(params)
   const supabase = createClient()
   const {data:{user}} = await supabase.auth.getUser()
   const {data:userId} = await supabase.from('profiles').select('id').eq('username',params.slug).single()
@@ -20,8 +19,9 @@ export default async function UserPage({params}:{params:{slug:string}}) {
   
   return (
     <div>
-      <div className='w-full p-12 text-center'>
-            <p className='text-lg font-semibold'>{params.slug}&apos;s recipes</p>
+      <div className='px-12 py-5'>
+            {user?.id===userId?.id?<p className='primary-title'><span>My</span>Recipes</p>
+            :<p className='primary-title'><span>{params.slug}&apos;s </span>Recipes</p>}
       </div>
      <RecipeCard recipes={recipes}/>
     </div>

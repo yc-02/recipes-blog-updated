@@ -71,7 +71,7 @@ export async function AddRecipeCard(formData:FormData,directionsData:string){
       }
 
 
-  const {error}=await supabase.from("recipes").insert({
+  const {data,error}=await supabase.from("recipes").insert({
       recipe_name:recipe.recipe_name,
       directions:directionsData,
       ingredients:recipe.ingredients,
@@ -85,7 +85,7 @@ export async function AddRecipeCard(formData:FormData,directionsData:string){
       throw new Error (error.message)
   }
   else{
-      redirect('/account/my-recipes')
+      redirect(`/user-recipes/${username?.username}`)
   }
 
 }
@@ -138,7 +138,7 @@ if(file!==undefined && file!==recipeOriginData.image_path){
       throw new Error (error.message)
   }
   else{
-      redirect('/account/my-recipes')
+      redirect('/my-recipes')
   }
 
 }
@@ -190,7 +190,7 @@ export async function updateProfile(formData:FormData,imageFile:string|null) {
     if(error){
       throw new Error(error.message)
     }else{
-      redirect('/account/profile')
+      redirect('/profile')
     }
 
 }

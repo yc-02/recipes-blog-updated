@@ -1,5 +1,5 @@
 import React from 'react'
-import Steps from '../add/Steps'
+import Steps from '../(auth)/add/Steps'
 
 export default function testPage() {
   return (

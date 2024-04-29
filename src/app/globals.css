@@ -11,10 +11,10 @@ body{
     @apply block font-semibold mt-2;
 }
 .input {
-    @apply appearance-none border rounded w-full p-3 leading-tight font-light border-inputBorder;
+    @apply appearance-none border rounded w-full p-3 leading-tight border-inputBorder font-medium;
 }
 .button{
-    @apply rounded p-1 text-base font-bold bg-primary text-white cursor-pointer;
+    @apply rounded p-1 font-bold bg-primary text-white cursor-pointer text-lg ;
  }
  
 .card{
@@ -32,7 +32,7 @@ body{
     absolute flex-col bg-white z-10 rounded right-0 top-12 shadow text-left w-full items-start py-2
 }
 .dropdown-link{
-    @apply hover:bg-secondary py-2 w-full px-3
+    @apply hover:bg-secondary py-2 w-full px-3 font-medium
 }
 .dropbtn{
     @apply flex gap-2 items-center cursor-pointer
@@ -55,4 +55,8 @@ body{
 }
 .publishBtn{
     @apply rounded p-2 bg-primary text-white font-bold
+}
+
+.primary-title{
+    @apply bg-primary text-white rounded-full h-24 w-24 flex italic text-wrap text-center items-center justify-center font-semibold flex-col
 }

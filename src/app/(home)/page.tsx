@@ -22,7 +22,7 @@ export default async function Home() {
 
   return (
       <div>
-      <RecipeCard recipes={recipes} user={user}/>
+      <RecipeCard recipes={recipes}/>
       </div>
   );
 }

@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import dayjs from 'dayjs';
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import DeleteButton from "@/app/components/DeleteButton";
+import { notFound } from "next/navigation";
 
 
 export async function generateMetadata({params}:{params:{id:string}}){
@@ -34,17 +35,24 @@ type recipeDetailsData={
     }
 }
 
+async function getRecipe(id:string) {
+    const supabase=createClient()
+    const {data}=await supabase.from('recipes').select(`*,profiles(avatar_url,username)`).eq('id',id).single()
+    if (!data){
+        notFound()
+    }
+    return data
+}
 
 
 export default async function RecipeDetails({params}:{params:{id:string}}){
     const supabase=createClient()
-    const {data}=await supabase.from('recipes').select(`*,profiles(avatar_url,username)`).eq('id',params.id).single()
-    const recipe:recipeDetailsData = data
     const {data:{user}} = await supabase.auth.getUser()
+    const recipe:recipeDetailsData = await getRecipe(params.id)
     const directions = JSON.parse(recipe.directions)
 
-    return(
 
+    return(
         <div className="px-12 py-6 flex flex-col gap-3">
         {user?(
             <>
@@ -52,7 +60,7 @@ export default async function RecipeDetails({params}:{params:{id:string}}){
                 <div className="md:h-96 w-full flex flex-col gap-3">
                 <p className="font-bold uppercase text-xl mb-5">{recipe.recipe_name}</p>
                 <p>Created by</p>
-                <Link href={`/user-recipe/${recipe.profiles.username}`} className="flex gap-2 items-center">
+                <Link href={`/user-recipes/${recipe.profiles.username}`} className="flex gap-2 items-center">
                 <div className="w-10 h-10 overflow-hidden rounded-full bg-purple-50">
                 <Image src={`${recipe.profiles.avatar_url}`} width={50} height={50} alt="profile-image" className="object-cover"/>
                 </div>
