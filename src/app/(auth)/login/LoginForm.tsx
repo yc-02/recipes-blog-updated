@@ -45,7 +45,7 @@ export default function LoginForm() {
 
  
  const imageLoader = ({ src, width, quality }:any) => {
-  return `http://localhost:3000/${src}?w=${width}&q=${quality || 75}`
+  return `https://recipes-blog-updated.vercel.app/${src}?w=${width}&q=${quality || 75}`
 }
 
  
