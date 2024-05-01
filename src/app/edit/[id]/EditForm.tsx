@@ -9,8 +9,6 @@ export default function EditForm({recipe}:{recipe:RecipesSupabaseDataType}) {
     const stepData = JSON.parse(recipe.directions)
     const [stepFormData,setStepFormData]=useState(stepData)
     const [file, setFile] = useState<string|undefined>(recipe?.image_path);
-    console.log(recipe,'what is origindata')
-
 
     
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {

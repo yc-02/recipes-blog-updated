@@ -54,8 +54,6 @@ export default async function RecipeDetails({params}:{params:{id:string}}){
 
     return(
         <div className="px-12 py-6 flex flex-col gap-3">
-        {user?(
-            <>
             <div className="grid md:grid-cols-2 gap-4">
                 <div className="md:h-96 w-full flex flex-col gap-3">
                 <p className="font-bold uppercase text-xl mb-5">{recipe.recipe_name}</p>
@@ -98,12 +96,6 @@ export default async function RecipeDetails({params}:{params:{id:string}}){
                 ))}
                 </div>
             </div>
-            </>
-            ):
-            (<div className="flex flex-col justify-center items-center h-96">
-                <p className="mb-4">Please Log in first.</p>
-                <Link href="/login" className="button">Log in</Link>
-            </div>)}
         </div>
     )
 }

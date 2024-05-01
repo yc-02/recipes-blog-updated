@@ -37,9 +37,10 @@ export default function AccountForm({ user }: { user: User | null }) {
             }
       
             if (data) {
-              setFirstName(data.first_name)
+              const [firstName,lastName]=data.full_name.split(',')
               setUsername(data.username)
-              setLastName(data.last_name)
+              setLastName(lastName)
+              setFirstName(firstName)
               setAvatarUrl(data.avatar_url)
             }
           } catch (error) {

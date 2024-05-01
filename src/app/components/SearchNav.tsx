@@ -8,8 +8,7 @@ export default async function SearchNav() {
 
   return (
       <div className='flex justify-between items-center px-12 py-5'>
-        <Link href="/" className='primary-title'>
-          <span>02</span>Recipes</Link>
+        <Link href="/" className='primary-title'>Recipes Blog</Link>
         <SearchBar/>
     </div>
 

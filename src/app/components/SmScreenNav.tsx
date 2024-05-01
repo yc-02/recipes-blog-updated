@@ -25,8 +25,8 @@ export default function SmScreenNav() {
       <div className="absolute top-0 left-0 flex-col bg-white h-full w-1/2 flex items-end p-3 gap-3 z-10">
         <button onClick={toggleNav}><XMarkIcon className='w-6 h-6'/></button>
        <Link href="/" onClick={toggleNav}>Home</Link>
-       <Link href="/" onClick={toggleNav}>About</Link>
-       <Link href="/" onClick={toggleNav}>Contact</Link>
+       <Link href="/about" onClick={toggleNav}>About</Link>
+       <Link href="/contact" onClick={toggleNav}>Contact</Link>
       </div>
       <div className="absolute top-0 right-0 bg-black h-full w-1/2 opacity-15 z-10" onClick={()=>setShowNav(false)}/>
       </div>

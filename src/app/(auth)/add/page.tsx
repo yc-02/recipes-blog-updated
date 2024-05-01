@@ -1,38 +1,23 @@
-"use client"
-import { FormEvent, useState } from "react";
-import { AddRecipeCard } from "@/app/action";
-import AddForm from "../../components/AddForm";
+import { Metadata } from "next";
+import AddClient from "./AddClient";
+import { createClient } from "@/utils/supabase/server";
 
+export const metadata:Metadata={
+  title:"Add Recipe"
+}
 
-export default function AddPage() {
- 
-  const [stepFormData, setStepFormData] = useState<string[]>([]);
-  const [file, setFile] = useState<string|undefined>();
-
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); 
-    const formData = new FormData(event.currentTarget); 
-    const directionsData = JSON.stringify(stepFormData)
-    try {
-      await AddRecipeCard(formData,directionsData);
-    } catch (error) {
-      console.error('Error updating profile:', error);
-    } 
-  };
-
-  
-
+export default async function AddPage() {
+  const supabase = createClient()
+  const {data:{user}} = await supabase.auth.getUser()
   return (
-    <div className="min-h-screen">
-    <AddForm 
-    handleSubmit={handleSubmit} 
-    setStepFormData={setStepFormData} 
-    stepFormData={stepFormData} 
-    file={file}
-    setFile={setFile}
-    />
-
-    </div>
+    <>
+        {user ?
+      <AddClient/>
+      :
+      <div className="flex items-center justify-center p-12 font-semibold">
+        <p className="capitalize">Please Sign in first to add Recipe.</p>
+      </div>
+    }
+    </>
   )
 }

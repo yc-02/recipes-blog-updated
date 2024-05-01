@@ -22,6 +22,7 @@ export async function login(formData: FormData) {
   redirect('/')
 }
 
+
 export async function signup(signupData:SignupDataType) {
 
    const { data, error } = await supabase.auth.signUp({
@@ -29,13 +30,11 @@ export async function signup(signupData:SignupDataType) {
       password: signupData.password
     })
 
-    console.log(data)
     if(data.user?.id!==null){
       const {error:profileError} = await supabase.from('profiles').insert({
         id:data.user?.id,
         email:signupData.email,
-        last_name:signupData.last_name,
-        first_name:signupData.first_name,
+        full_name:`${signupData.first_name},${signupData.last_name}`,
         username:signupData.username,
         updated_at:new Date().toISOString(),
       })
@@ -108,7 +107,7 @@ export async function deleteRecipeCard(id:string){
 //edit recipe
 export async function EditRecipeCard(formData:FormData,directionsData:string,recipeOriginData:RecipesSupabaseDataType,file:string|undefined){
   const recipe=Object.fromEntries(formData)
- console.log(recipe,'what is recipe')
+
 
 if(file!==undefined && file!==recipeOriginData.image_path){
   const file = recipe.image_data
@@ -155,8 +154,8 @@ export async function updateProfile(formData:FormData,imageFile:string|null) {
   const {data} = await supabase.from('profiles').select('avatar_url').eq('id',user?.id).single()
   const profile=Object.fromEntries(formData)
 
-
   const filePath = `${user?.id}/profile-image`
+//update bucket
   if(imageFile!==null){
     if(data?.avatar_url!==null){
      const {data:imageData,error} = await supabase.storage.from('avatar').update(filePath,profile.avatar_url,{
@@ -165,7 +164,6 @@ export async function updateProfile(formData:FormData,imageFile:string|null) {
       if (error){
         throw new Error (error.message)
       }
-      console.log(imageData,'origin data?')
     }else{
       const {data:uploadData,error:uploadError} = await supabase.storage.from('avatar').upload(filePath,profile.avatar_url,{
         contentType:  'image/png,image/jpeg',
@@ -175,22 +173,38 @@ export async function updateProfile(formData:FormData,imageFile:string|null) {
     }
   }
   }
-
-   
-
+//update profile
+   if(imageFile!==null){
     const { error } = await supabase.from('profiles').upsert({
       id: user?.id as string,
       email:user?.email,
-      first_name: profile.first_name,
       username: profile.username,
-      last_name: profile.last_name,
+      full_name:`${profile.first_name},${profile.last_name}`,
       updated_at: new Date().toISOString(),
-      avatar_url:`avatar/${user?.id}/profile-image`
+      avatar_url:`avatar/${filePath}`
     })
     if(error){
       throw new Error(error.message)
     }else{
       redirect('/profile')
     }
+
+   }else{
+    const { error } = await supabase.from('profiles').upsert({
+      id: user?.id as string,
+      email:user?.email,
+      username: profile.username,
+      full_name:`${profile.first_name},${profile.last_name}`,
+      updated_at: new Date().toISOString(),
+    })
+    if(error){
+      throw new Error(error.message)
+    }else{
+      redirect('/profile')
+    }
+
+   }
+
+
 
 }

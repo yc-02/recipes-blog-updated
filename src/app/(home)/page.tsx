@@ -4,7 +4,6 @@ import { RecipeCardType, LikesSupabaseDataType } from "../Types";
 import RecipeCard from "../components/RecipeCard";
 
 
-
 export default async function Home() {
   const supabase = createClient()
   const {data:{user}} = await supabase.auth.getUser();
@@ -17,9 +16,7 @@ export default async function Home() {
       likesCount:recipe.likes.length
     }
   })
-
-
-
+  
   return (
       <div>
       <RecipeCard recipes={recipes}/>

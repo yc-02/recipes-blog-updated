@@ -3,6 +3,8 @@ import { Quicksand } from "next/font/google";
 import "./globals.css";
 import Footer from "./components/Footer";
 import AuthNav from "./components/AuthNav";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 const myFont = Quicksand
 
@@ -11,7 +13,7 @@ const myFont = Quicksand
 })
 
 export const metadata: Metadata = {
-  title: "02 Recipes",
+  title: "Recipes Blog",
   description: "Homemade recipes",
 };
 
@@ -25,7 +27,9 @@ export default function RootLayout({
       <body className={myFont.className}>
         <div className="min-h-screen">
         <AuthNav/>
-          {children}
+        <Suspense fallback={<Loading/>}>
+        {children}
+        </Suspense>
        <footer className="w-full text-center">
         <Footer/>
       </footer>

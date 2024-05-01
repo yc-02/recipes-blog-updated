@@ -3,10 +3,17 @@ import RecipeCard from '@/app/components/RecipeCard'
 import { createClient } from '@/utils/supabase/server'
 import React from 'react'
 
+export async function generateMetadata({params}:{params:{slug:string}}){
+  return{
+      title:`${params.slug}`
+  }
+}
+
 export default async function UserPage({params}:{params:{slug:string}}) {
   const supabase = createClient()
   const {data:{user}} = await supabase.auth.getUser()
-  const {data:userId} = await supabase.from('profiles').select('id').eq('username',params.slug).single()
+  const decodedSlug = decodeURIComponent(params.slug);
+  const {data:userId} = await supabase.from('profiles').select('id').eq('username',decodedSlug).single()
   const {data}=await supabase.from("recipes").select(`*,likes(*)`).eq('user_id',userId?.id).order('id', { ascending: false })
   const recipes:RecipeCardType[]|undefined = data?.map((recipe)=>{
     const userHasLiked = recipe.likes.find((like:LikesSupabaseDataType)=>like.user_id === user?.id)
@@ -16,7 +23,9 @@ export default async function UserPage({params}:{params:{slug:string}}) {
       likesCount:recipe.likes.length
     }
   })
-  
+
+
+
   return (
     <div>
       <div className='px-12 py-5'>
