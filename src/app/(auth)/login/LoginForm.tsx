@@ -44,11 +44,6 @@ export default function LoginForm() {
 
 
  
- const imageLoader = ({ src, width, quality }:any) => {
-  return `https://recipes-blog-updated.vercel.app/${src}?w=${width}&q=${quality || 75}`
-}
-
- 
   
   return (
     <div className='flex justify-center p-13 flex-col items-center'>
@@ -67,7 +62,7 @@ export default function LoginForm() {
     </div>
     <p className="inputLabel">Or</p>
     <button onClick={handleLoginWithGoogle} type="button" className="my-3">
-     <Image loader={imageLoader} src="/web_light_sq_SI@4x.png" alt="google signin" width={0} height={0} className="w-48 object-cover"/>
+     <Image src="/web_light_sq_SI@4x.png" alt="google signin" width={0} height={0} className="w-48 object-cover" unoptimized/>
     </button>
     <div>
       <Link className="inline-block font-bold" href="/update-password">Forgot Password?</Link>
