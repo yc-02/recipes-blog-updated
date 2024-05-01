@@ -16,7 +16,7 @@ export default function SearchBar() {
     <form onSubmit={handleSubmit}>
         <label className='flex gap-1'>
         <input 
-        className='border border-inputBorder p-2 rounded text-lg shadow'
+        className='border border-inputBorder p-2 rounded md:text-lg shadow text-base'
         type='text'
         value={search}
         placeholder='Search recipes'

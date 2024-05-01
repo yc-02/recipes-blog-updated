@@ -58,5 +58,5 @@ body{
 }
 
 .primary-title{
-    @apply bg-primary text-white rounded-full h-24 w-24 flex italic text-wrap text-center items-center justify-center font-semibold flex-col
+    @apply bg-primary text-white rounded-full md:h-24 md:w-24 flex italic text-wrap text-center items-center justify-center font-semibold flex-col w-14 h-14 text-xs md:text-base
 }
