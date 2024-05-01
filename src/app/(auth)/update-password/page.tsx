@@ -35,11 +35,11 @@ export default function ResetPasswordpage() {
    <div className='flex flex-col gap-5 p-12 items-center'>
     <p className='font-bold'>Set a new password</p>
     <p>We will send you a link to reset your password </p>
-    <form onSubmit={handleSubmit} className='flex flex-col gap-5 w-1/2 items-center'>
+    <form onSubmit={handleSubmit} className='flex flex-col gap-5 items-center w-72'>
     <input
     onChange={(e)=>setEmail(e.target.value)} 
     type="email" placeholder='Email' required
-    className='p-1 border border-slate-500 w-72 rounded'/>
+    className='input'/>
     <button className='button'>Send Email</button>
     </form>
     {error&& <p className='text-pink-800'>{error}</p>}

@@ -1,11 +1,11 @@
 "use client"
 import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
-import { RecipeType } from "../Types";
 import { HeartIcon} from '@heroicons/react/24/solid'
+import { RecipeCardType } from "../Types"
 
 
-export default function Likes({recipe}:{recipe:RecipeType}) {
+export default function Likes({recipe}:{recipe:RecipeCardType}) {
   
   const router=useRouter()
 
