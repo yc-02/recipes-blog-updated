@@ -3,6 +3,8 @@ import { ChangeEvent,useState } from "react";
 import { signup } from "../../action";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SignupDataType} from "@/app/Types";
+import { ErrorMessage } from "@hookform/error-message";
+import { validate } from "uuid";
 
 
 interface profileData{
@@ -19,7 +21,7 @@ export default function SignUpClient({profileEmail,profileUsername}:profileData)
       register,
       handleSubmit,
       formState: { errors},
-    } = useForm<SignupDataType>()
+    } = useForm<SignupDataType>({criteriaMode: "all"})
   
   
     const [emailError,setEmailError]=useState<boolean>(false)
@@ -56,28 +58,68 @@ export default function SignUpClient({profileEmail,profileUsername}:profileData)
       <div className='flex justify-center p-13'>
       <form className='w-full max-w-xs p-10 rounded' onSubmit={handleSubmit(onSubmit)}>
       <label htmlFor="email" className='inputLabel'>Email</label>
-      <input {...register("email", { required: true })} className="input"  
-      onBlur={handleValidateEmail} onFocus={()=>setEmailError(false)}
+      <input 
+      {...register("email", { 
+        required: "This field is required.",
+        pattern:{
+        value:/^([a-z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,10})(\.[a-z]{2,10})?$/,
+        message:'Invalid email address.'
+      } 
+    })} 
+      className="input"  
+      onBlur={handleValidateEmail} 
+      onFocus={()=>setEmailError(false)}
       />
-        {errors.email && <span className="text-red-500 text-sm">*This field is required</span>}
-        {emailError===true && <p className="text-red-500 text-sm">*This email is already registered. Please use another one.</p>}
+      <ErrorMessage errors={errors} name="email" render={({messages})=>messages && Object.entries(messages).map(([type,message])=>(
+        <p key={type} className="text-red-500 text-sm">{message}</p>
+      ))}/>
+        {emailError===true && <p className="text-red-500 text-sm">This email is already registered. Please use another one.</p>}
       <label htmlFor="password" className='inputLabel'>Password</label>
-      <input {...register("password", { required: true })} className="input" type="password"/>
-        {errors.password && <span className="text-red-500 text-sm">*This field is required</span>}
+      <input 
+      {...register("password", 
+      { required:"This field is required.",
+        pattern:{
+          value:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}/.|:"<>?])(?=.*[a-zA-Z0-9]).{6,}$/,
+          message:'Password should include at least 6 characters, and contain a combination of uppercase and lowercase letters, numbers, and symbols.'
+        },
+      })} 
+      className="input" 
+      type="password"/>
+        <ErrorMessage errors={errors} name="password" render={({messages})=>messages && Object.entries(messages).map(([type,message])=>(
+        <p key={type} className="text-red-500 text-sm">{message}</p>
+      ))}/>
     
       <label htmlFor="first_name" className='inputLabel'>First Name</label>
-      <input {...register("first_name", { required: true })} className="input" />
-        {errors.first_name && <span className="text-red-500 text-sm">*This field is required</span>}
+      <input 
+      {...register("first_name", 
+      { required: "This field is required." })} 
+      className="input" />
+      <ErrorMessage errors={errors} name="first_name" render={({message})=><p className="text-red-500 text-sm">{message}</p>}/>
       <label htmlFor="last_name" className='inputLabel'>Last Name</label>
-      <input {...register("last_name", { required: true })} className="input" />
-        {errors.last_name && <span className="text-red-500 text-sm">*This field is required</span>}
+      <input 
+      {...register("last_name", 
+      { required: "This field is required." })} 
+      className="input" />
+      <ErrorMessage errors={errors} name="last_name" render={({message})=><p className="text-red-500 text-sm">{message}</p>}/>
       <label htmlFor="username" className='inputLabel'>Username</label>
-      <input {...register("username", { required: true })} className="input" 
+      <input 
+      {...register("username", 
+      { required: "This field is required.",
+        pattern:{
+          value:/^[a-z\d-]{5,}$/,
+          message:"The username must be at least 5 characters and can only include lowercase letters, numbers, and hyphens (-)."
+        }
+       },
+      )} 
+      className="input" 
       onBlur={handleValidateUsername} 
       onFocus={()=>setUsernameError(false)}
       />
-        {errors.username && <span className="text-red-500 text-sm">*This field is required</span>}
-      {usernameError ===true && <p className="text-red-500 text-sm">*Username already exists. Please choose a different one.</p>}
+      <ErrorMessage errors={errors} name="username" render={({messages})=>messages && Object.entries(messages).map(([type,message])=>(
+        <p key={type} className="text-red-500 text-sm">{message}</p>
+      ))}/>
+    
+      {usernameError ===true && <p className="text-red-500 text-sm">Username already exists. Please choose a different one.</p>}
     <div className='my-3'>
     <button type="submit" className='button'>Sign up</button>
     </div>
