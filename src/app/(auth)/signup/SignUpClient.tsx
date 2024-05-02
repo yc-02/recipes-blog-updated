@@ -4,7 +4,6 @@ import { signup } from "../../action";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SignupDataType} from "@/app/Types";
 import { ErrorMessage } from "@hookform/error-message";
-import { validate } from "uuid";
 
 
 interface profileData{
@@ -106,8 +105,8 @@ export default function SignUpClient({profileEmail,profileUsername}:profileData)
       {...register("username", 
       { required: "This field is required.",
         pattern:{
-          value:/^[a-z\d-]{5,}$/,
-          message:"The username must be at least 5 characters and can only include lowercase letters, numbers, and hyphens (-)."
+          value:/^[a-z\d-]{4,}$/,
+          message:"The username must be at least 4 characters and can only include lowercase letters, numbers, and hyphens (-)."
         }
        },
       )} 
