@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
-import AccountForm from '../../components/AccountForm'
 import { createClient } from '@/utils/supabase/server'
-import {v4 as uuidv4} from 'uuid'
+import UpdateProfileForm from '@/app/components/UpdateProfileForm'
 
 export const metadata:Metadata={
   title:"Profile"
@@ -14,12 +13,13 @@ export default async function profilePage() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
+  const {data:profileUsername}= await supabase.from("profiles").select('username')
 
 
 
   return (
     <div className='pt-14'>
-    <AccountForm user={user} />
+    <UpdateProfileForm user={user} profileUsername={profileUsername} />
     </div>
 
 )

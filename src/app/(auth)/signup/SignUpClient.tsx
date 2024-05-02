@@ -1,12 +1,20 @@
 "use client"
 import { ChangeEvent,useState } from "react";
 import { signup } from "../../action";
-import { createClient } from "@/utils/supabase/client";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SignupDataType} from "@/app/Types";
 
 
-export default function SignUpClient() {
+interface profileData{
+  profileEmail: {
+    email: string;
+}[] | null
+profileUsername: {
+  username: string;
+}[] |null
+}
+
+export default function SignUpClient({profileEmail,profileUsername}:profileData) {
     const {
       register,
       handleSubmit,
@@ -14,42 +22,45 @@ export default function SignUpClient() {
     } = useForm<SignupDataType>()
   
   
-    const [emailError,setEmailError]=useState<{ email: any; }[] | null>(null)
-    const [usernameError,setUsernameError]=useState<{username: any;}[] | null>(null)
-  
-    const supabase = createClient()
-    async function getEmailData(email:string) {
-        const {data:profileEmail} = await supabase.from("profiles").select('email').eq("email",email);
-        setEmailError(profileEmail)
-      }
-    async function getUsernameData(username:string) {
-      const {data:profileUsername}= await supabase.from("profiles").select('username').eq("username",username);
-      setUsernameError(profileUsername)
-    }
-  
+    const [emailError,setEmailError]=useState<boolean>(false)
+    const [usernameError,setUsernameError]=useState<boolean>(false)
   
     const onSubmit:SubmitHandler<SignupDataType>= (data)=>{
-      if(emailError?.length===0 && usernameError?.length===0){
+      if(emailError===false  && usernameError === false){
         signup(data)
       }
     }
     const handleValidateEmail=(e:ChangeEvent<HTMLInputElement>)=>{
-    getEmailData(e.target.value)
-  
+     if(e.target.value.length>0){
+      const exist = profileEmail?.some(a=>a.email.toLowerCase() === e.target.value.toLowerCase())
+      if(exist){
+       setEmailError(exist)
+      }else{
+       setEmailError(false)
+      }
+     }
     }
     const handleValidateUsername=(e:ChangeEvent<HTMLInputElement>)=>{
-    getUsernameData(e.target.value)
+      if(e.target.value.length>0){
+        const exist = profileUsername?.some(a=>a.username.toLowerCase() ===e.target.value.toLowerCase())
+        if(exist){
+         setUsernameError(exist)
+        }else{
+         setUsernameError(false)
+        }
+      }
     }
+
   
     return (
       <div className='flex justify-center p-13'>
       <form className='w-full max-w-xs p-10 rounded' onSubmit={handleSubmit(onSubmit)}>
       <label htmlFor="email" className='inputLabel'>Email</label>
       <input {...register("email", { required: true })} className="input"  
-      onBlur={handleValidateEmail} onFocus={()=>setEmailError(null)}
+      onBlur={handleValidateEmail} onFocus={()=>setEmailError(false)}
       />
         {errors.email && <span className="text-red-500 text-sm">*This field is required</span>}
-        {emailError && emailError.length!==0 && <p className="text-red-500 text-sm">*This email is already registered. Please use another one.</p>}
+        {emailError===true && <p className="text-red-500 text-sm">*This email is already registered. Please use another one.</p>}
       <label htmlFor="password" className='inputLabel'>Password</label>
       <input {...register("password", { required: true })} className="input" type="password"/>
         {errors.password && <span className="text-red-500 text-sm">*This field is required</span>}
@@ -63,10 +74,10 @@ export default function SignUpClient() {
       <label htmlFor="username" className='inputLabel'>Username</label>
       <input {...register("username", { required: true })} className="input" 
       onBlur={handleValidateUsername} 
-      onFocus={()=>setUsernameError(null)}
+      onFocus={()=>setUsernameError(false)}
       />
         {errors.username && <span className="text-red-500 text-sm">*This field is required</span>}
-      {usernameError && usernameError.length!==0 && <p className="text-red-500 text-sm">*Username already exists. Please choose a different one.</p>}
+      {usernameError ===true && <p className="text-red-500 text-sm">*Username already exists. Please choose a different one.</p>}
     <div className='my-3'>
     <button type="submit" className='button'>Sign up</button>
     </div>

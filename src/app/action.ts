@@ -35,7 +35,7 @@ export async function signup(signupData:SignupDataType) {
         id:data.user?.id,
         email:signupData.email,
         full_name:`${signupData.first_name},${signupData.last_name}`,
-        username:signupData.username,
+        username:signupData.username.toLowerCase(),
         updated_at:new Date().toISOString(),
       })
       if(profileError){
@@ -153,11 +153,13 @@ export async function updateProfile(formData:FormData,imageFile:string|null) {
   const {data:{user}}=await supabase.auth.getUser()
   const {data} = await supabase.from('profiles').select('avatar_url').eq('id',user?.id).single()
   const profile=Object.fromEntries(formData)
-
+  const usernameLower = profile.username.toString().toLowerCase()
   const filePath = `${user?.id}/profile-image`
+
 //update bucket
+
   if(imageFile!==null){
-    if(data?.avatar_url!==null){
+    if(data?.avatar_url && !data?.avatar_url.includes('https')){
      const {data:imageData,error} = await supabase.storage.from('avatar').update(filePath,profile.avatar_url,{
         contentType:  'image/png,image/jpeg',
       })
@@ -178,7 +180,7 @@ export async function updateProfile(formData:FormData,imageFile:string|null) {
     const { error } = await supabase.from('profiles').upsert({
       id: user?.id as string,
       email:user?.email,
-      username: profile.username,
+      username: usernameLower,
       full_name:`${profile.first_name},${profile.last_name}`,
       updated_at: new Date().toISOString(),
       avatar_url:`avatar/${filePath}`
@@ -193,7 +195,7 @@ export async function updateProfile(formData:FormData,imageFile:string|null) {
     const { error } = await supabase.from('profiles').upsert({
       id: user?.id as string,
       email:user?.email,
-      username: profile.username,
+      username: usernameLower,
       full_name:`${profile.first_name},${profile.last_name}`,
       updated_at: new Date().toISOString(),
     })

@@ -7,7 +7,11 @@ import Image from "next/image";
 import { updateProfile } from '@/app/action'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 
-export default function AccountForm({ user }: { user: User | null }) {
+export default function UpdateProfileForm({ user,profileUsername }: { 
+  user: User | null;
+  profileUsername: {
+  username: any;
+}[] | null}) {
   const supabase = createClient()
   const [loading, setLoading] = useState(true)
   const [first_name, setFirstName] = useState<string | null>(null)
@@ -15,6 +19,7 @@ export default function AccountForm({ user }: { user: User | null }) {
   const [username, setUsername] = useState<string | null>(null)
   const [avatar_url, setAvatarUrl] = useState<string|null>(null);
   const [imageFile,setImageFile]= useState<string|null>(null);
+  const [usernameError,setUsernameError]=useState<boolean>(false);
   function handleChange(e:ChangeEvent<HTMLInputElement>) {
        if(e.target.files){
          setImageFile(URL.createObjectURL(e.target.files[0]));
@@ -64,14 +69,28 @@ export default function AccountForm({ user }: { user: User | null }) {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); 
     const formData = new FormData(event.currentTarget); 
-    try {
-      await updateProfile(formData,imageFile);
-    } catch (error) {
-      console.error('Error updating profile:', error);
-    } finally{
-      alert('updated!')
+    if(usernameError!==true){
+      try {
+        await updateProfile(formData,imageFile);
+      } catch (error) {
+        console.error('Error updating profile:', error);
+      } finally{
+        alert('updated!')
+      }
+
     }
   };
+
+  const handleValidateUsername=(e:ChangeEvent<HTMLInputElement>)=>{
+    if(e.target.value.length>0){
+      const exist = profileUsername?.some(a=>a.username.toLowerCase() ===e.target.value.toLowerCase())
+      if(exist){
+       setUsernameError(exist)
+      }else{
+       setUsernameError(false)
+      }
+    }
+  }
 
 
   return (
@@ -119,6 +138,7 @@ export default function AccountForm({ user }: { user: User | null }) {
           value={first_name || ''}
           onChange={(e) => setFirstName(e.target.value)}
           className='input'
+          required
         />
         <label htmlFor="last_name" className='inputLabel'>Last Name</label>
         <input
@@ -128,6 +148,7 @@ export default function AccountForm({ user }: { user: User | null }) {
           value={last_name || ''}
           onChange={(e) => setLastName(e.target.value)}
           className='input'
+          required
         />
         <label htmlFor="username" className='inputLabel'>Username</label>
         <input
@@ -137,7 +158,11 @@ export default function AccountForm({ user }: { user: User | null }) {
           value={username || ''}
           onChange={(e) => setUsername(e.target.value)}
           className='input'
+          required
+          onBlur={handleValidateUsername} 
+          onFocus={()=>setUsernameError(false)}
         />
+        {usernameError ===true && <p className="text-red-500 text-sm">*Username already exists. Please choose a different one.</p>}
       <div className='my-3'>
       <button className="button" type="submit" disabled={isPending||loading}>
         {isPending && (

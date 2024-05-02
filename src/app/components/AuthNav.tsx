@@ -1,7 +1,7 @@
 import AuthNavClient from "./AuthNavClient"
 import { createClient } from "@/utils/supabase/server"
 import {v4 as uuidv4} from 'uuid'
-
+import Image from "next/image"
 export default async function AuthNav() {
 
     const supabase = createClient()
@@ -18,7 +18,7 @@ export default async function AuthNav() {
           const { data, error } = await supabase.from('profiles').insert({
             id: user?.id,
             email:user?.email,
-            username: `${user?.user_metadata.full_name}-${uuidv4()}`,
+            username: `${user?.user_metadata.full_name.replace(/\s+/,'-')}-${uuidv4()}`.toLowerCase(),
             full_name: user?.user_metadata.full_name.replace(/(\S+)\s+(\S+)/, '$1,$2'),
             updated_at: new Date().toISOString(),
             avatar_url:user?.user_metadata.avatar_url
@@ -31,6 +31,7 @@ export default async function AuthNav() {
     }
 
     const {data} = await supabase.from('profiles').select('avatar_url, username').eq('id',user?.id).single()
+
 
   return ( 
     <div className="flex items-center gap-5 justify-between w-full py-2 px-6 bg-secondary">
