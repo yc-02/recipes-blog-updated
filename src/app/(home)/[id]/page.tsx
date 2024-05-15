@@ -64,7 +64,7 @@ export default async function RecipeDetails({params}:{params:{id:string}}){
                 </div>
                 <p> {recipe.profiles.username}</p>
                 </Link>
-                <p className="flex"><span className="mr-1">Updated</span>{dayjs(recipe.created_at).format('MMM D, YYYY h:mm A')}</p>
+                <p className="flex"><span className="mr-1">Updated at</span>{dayjs(recipe.created_at).format('MMM D, YYYY h:mm A')}</p>
                     {user?.id === recipe.user_id && 
                     <div className="flex items-center gap-3">
                         <Link href={`/edit/${recipe.id}`}>

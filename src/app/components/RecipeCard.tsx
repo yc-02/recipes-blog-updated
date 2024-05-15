@@ -52,7 +52,7 @@ export default function RecipeCard({recipes}:{recipes:RecipeCardType[]|undefined
             </div>
           <div className="m-4">
           <p className="font-bold uppercase text-lg">{recipe.recipe_name}</p>
-          <p className="flex text-text-secondary items-baseline gap-2">Updated at</p>
+          <p className="flex text-text-secondary items-baseline gap-2">Created at</p>
           <p className='text-sm text-text-secondary'>{dayjs(recipe.created_at).format('MMM D, YYYY h:mm A')}</p>
           </div>
           <div className="badges">
